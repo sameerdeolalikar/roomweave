@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "title": "The paper workshop",
+  "width": 6000,
+  "height": 4500,
+  "objects": [
+    {
+      "id": "bench",
+      "name": "Assembly bench",
+      "x": 500,
+      "y": 500,
+      "width": 1800,
+      "height": 800,
+      "clearance": 300,
+      "kind": "work"
+    },
+    {
+      "id": "shelf",
+      "name": "Paper shelves",
+      "x": 4000,
+      "y": 300,
+      "width": 1400,
+      "height": 500,
+      "clearance": 250,
+      "kind": "storage"
+    },
+    {
+      "id": "table",
+      "name": "Cutting table",
+      "x": 2800,
+      "y": 2000,
+      "width": 1600,
+      "height": 1000,
+      "clearance": 400,
+      "kind": "work"
+    },
+    {
+      "id": "chair",
+      "name": "Reading seat",
+      "x": 700,
+      "y": 2800,
+      "width": 650,
+      "height": 650,
+      "clearance": 200,
+      "kind": "seating"
+    }
+  ]
+}
