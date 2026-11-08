@@ -45,6 +45,8 @@ Objects are axis-aligned rectangles. Overlaps and clearance problems are notices
 
 Documents have at most 150 entries; the library supports 100 documents. Request/import size is bounded to 256 KB. Undo/redo is per-tab memory, not durable history. Export drafts before closing; there is no automatic crash recovery yet. Optimistic revisions reject stale saves, but merging conflicts is future work.
 
+Save requests create a document only when its ID is omitted or `null` and its revision is zero. An empty ID is rejected without changing the library.
+
 ## Planned development
 
 [ROADMAP.md](ROADMAP.md) specifies approximately **68–100 hours** of proposed work with acceptance criteria. [QUALITY-PLAN.md](QUALITY-PLAN.md) describes representative review dimensions and transition cases. Estimates are future engineering effort, not completed hours or promised paid work. [CONTRIBUTING.md](CONTRIBUTING.md) explains contribution conventions.

@@ -32,6 +32,24 @@ class Tests(unittest.TestCase):
             store=Store(Path(tmp)/"library.sqlite3");first=store.save({"revision":0,"document":self.fresh()})
             with self.assertRaises(ValueError):store.save({**first,"document":{"version":2}})
             self.assertEqual(store.get(first["id"]),first)
+    def test_empty_save_id_preserves_library_and_allows_retry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Store(Path(tmp) / "library.sqlite3")
+            first = store.save({"revision": 0, "document": self.fresh()})
+            before = store.list()
+            for revision in (0, first["revision"]):
+                with self.subTest(revision=revision):
+                    with self.assertRaisesRegex(ValueError, "Invalid document ID"):
+                        store.save({"id": "", "revision": revision, "document": self.fresh()})
+                    self.assertEqual(store.list(), before)
+                    self.assertEqual(store.get(first["id"]), first)
+            updated = store.save({**first, "document": dict(first["document"], title="Updated room")})
+            self.assertEqual(updated["revision"], 2)
+            self.assertEqual(store.get(first["id"]), updated)
+            created = store.save({"id": None, "revision": 0, "document": self.fresh()})
+            self.assertNotEqual(created["id"], first["id"])
+            self.assertEqual(created["revision"], 1)
+            self.assertEqual(len(store.list()), 2)
     def test_boundary_and_boolean_dimensions(self):
         for key,value in [("x",-1),("width",True),("x",6000)]:
             d=self.fresh();d["objects"][0][key]=value
