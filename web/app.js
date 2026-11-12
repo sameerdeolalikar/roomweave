@@ -147,7 +147,7 @@ function dialog(title, fields, callback) {
       const e = $("field-" + key);
       values[key] =
         type === "number"
-          ? Number(e.value)
+          ? e.valueAsNumber
           : type === "checkbox"
             ? e.checked
             : e.value;

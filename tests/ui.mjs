@@ -45,6 +45,25 @@ try {
   await page.locator("#dialog-error:not([hidden])").waitFor();
   await page.click("#cancel");
   assert.equal((await exported()).objects.find((x) => x.id === "bench").x, 510);
+  const beforeBlank = await exported();
+  for (const field of ["x", "clearance"]) {
+    await page.locator("#shape-bench").focus();
+    await page.keyboard.press("Enter");
+    await page.fill("#field-" + field, "");
+    await page.click("#apply");
+    await page.locator("#dialog-error:not([hidden])").waitFor();
+    assert.equal(await page.locator("#editor").evaluate((x) => x.open), true);
+    await page.click("#cancel");
+    assert.deepEqual(await exported(), beforeBlank);
+  }
+  await page.locator("#shape-bench").focus();
+  await page.keyboard.press("Enter");
+  await page.fill("#field-clearance", "0");
+  await apply();
+  assert.equal((await exported()).objects.find((x) => x.id === "bench").clearance, 0);
+  await page.click("#undo");
+  await ready();
+  assert.deepEqual(await exported(), beforeBlank);
   await page.selectOption("#tool-zoom", "2");
   const box = await page.locator("#shape-bench").boundingBox();
   assert(box);
