@@ -49,6 +49,8 @@ Save requests create a document only when its ID is omitted or `null` and its re
 
 Numeric editor fields require an explicit value. Clearing a coordinate or clearance field produces a validation error and preserves the document; enter `0` when zero is intended.
 
+Rejected object additions preserve the current selection, so cancelling an invalid addition leaves the selected object available for editing.
+
 ## Planned development
 
 [ROADMAP.md](ROADMAP.md) specifies approximately **68–100 hours** of proposed work with acceptance criteria. [QUALITY-PLAN.md](QUALITY-PLAN.md) describes representative review dimensions and transition cases. Estimates are future engineering effort, not completed hours or promised paid work. [CONTRIBUTING.md](CONTRIBUTING.md) explains contribution conventions.

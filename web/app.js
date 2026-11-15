@@ -176,8 +176,8 @@ function editEntry(entry) {
       if (entry)
         next[KEY] = next[KEY].map((x) => (x.id === entry.id ? result : x));
       else next[KEY].push(result);
-      selected = new Set([result.id]);
       await change(next);
+      pick(result.id);
     },
   );
 }
