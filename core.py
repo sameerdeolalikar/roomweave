@@ -10,6 +10,8 @@ def integer(value, low, high, label):
 def text(value, label, maximum=120):
     if not isinstance(value, str) or not value.strip() or len(value) > maximum:
         raise ValueError(f"{label} must contain 1–{maximum} characters.")
+    if re.search(r"[^\x09\x0a\x0d\x20-\ud7ff\ue000-\ufffd\U00010000-\U0010ffff]", value):
+        raise ValueError(f"{label} contains unsupported characters for SVG export.")
     return value.strip()
 
 def choice(value, allowed, label):

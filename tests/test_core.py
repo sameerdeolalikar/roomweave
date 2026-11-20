@@ -32,6 +32,27 @@ class Tests(unittest.TestCase):
             store=Store(Path(tmp)/"library.sqlite3");first=store.save({"revision":0,"document":self.fresh()})
             with self.assertRaises(ValueError):store.save({**first,"document":{"version":2}})
             self.assertEqual(store.get(first["id"]),first)
+    def test_invalid_text_preserves_saved_document_and_allows_retry(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = Store(Path(tmp) / "library.sqlite3")
+            first = store.save({"revision": 0, "document": self.fresh()})
+            for field in ("title", "name"):
+                for character in ("\x00", "\x08", "\x0b", "\x1f", "\ud800", "\udfff", "\ufffe", "\uffff"):
+                    with self.subTest(field=field, character=repr(character)):
+                        document = self.fresh()
+                        target = document if field == "title" else document["objects"][0]
+                        target[field] = "Room" + character + "label"
+                        with self.assertRaisesRegex(ValueError, "unsupported characters"):
+                            store.save({**first, "document": document})
+                        self.assertEqual(store.get(first["id"]), first)
+                        self.assertEqual(len(store.list()), 1)
+            document = self.fresh()
+            label = "Café & <work>\t\n\r工具 🪑"
+            document["title"] = label
+            document["objects"][0]["name"] = label
+            updated = store.save({**first, "document": document})
+            self.assertEqual(updated["revision"], 2)
+            self.assertEqual(store.get(first["id"])["document"], document)
     def test_empty_save_id_preserves_library_and_allows_retry(self):
         with tempfile.TemporaryDirectory() as tmp:
             store = Store(Path(tmp) / "library.sqlite3")

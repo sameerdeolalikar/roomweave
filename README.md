@@ -49,6 +49,8 @@ Save requests create a document only when its ID is omitted or `null` and its re
 
 Numeric editor fields require an explicit value. Clearing a coordinate or clearance field produces a validation error and preserves the document; enter `0` when zero is intended.
 
+Titles and object names must contain XML-compatible text so SVG exports remain readable. Unsupported control characters and unpaired Unicode surrogates are rejected without changing the document; ordinary Unicode, tabs and line breaks are supported.
+
 Rejected object additions preserve the current selection, so cancelling an invalid addition leaves the selected object available for editing.
 
 ## Planned development

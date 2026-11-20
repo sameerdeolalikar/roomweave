@@ -152,6 +152,42 @@ try {
   await page.locator("#error:not([hidden])").waitFor();
   await ready();
   assert.deepEqual(await exported(), expected);
+  const invalidLabel = structuredClone(expected);
+  invalidLabel.objects[0].name = "Bench\u0000label";
+  await page.setInputFiles("#import", {
+    name: "invalid-label.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(invalidLabel)),
+  });
+  await page.locator("#error:not([hidden])").waitFor();
+  await ready();
+  assert.match(await page.locator("#error").textContent(), /unsupported characters/);
+  assert.deepEqual(await exported(), expected);
+  const validLabel = structuredClone(expected);
+  validLabel.objects[0].name = "Café & <work> 工具 🪑";
+  await page.setInputFiles("#import", {
+    name: "valid-label.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(validLabel)),
+  });
+  await page.waitForFunction(
+    () => document.getElementById("status").textContent ===
+      "Document imported. Save to add it to the library.",
+  );
+  await ready();
+  assert.deepEqual(await exported(), validLabel);
+  const labelDownload = page.waitForEvent("download");
+  await page.click("#visual-export");
+  const labelSvg = await readFile(await (await labelDownload).path(), "utf8");
+  const parsedLabel = await page.evaluate((source) => {
+    const svg = new DOMParser().parseFromString(source, "image/svg+xml");
+    return {
+      invalid: !!svg.querySelector("parsererror"),
+      name: svg.querySelector("g text")?.textContent,
+    };
+  }, labelSvg);
+  assert.deepEqual(parsedLabel, { invalid: false, name: validLabel.objects[0].name });
+  await ready();
   await page.setInputFiles("#import", "examples/sample.json");
   await page.waitForFunction(
     () =>
