@@ -53,6 +53,8 @@ Titles and object names must contain XML-compatible text so SVG exports remain r
 
 Rejected object additions preserve the current selection, so cancelling an invalid addition leaves the selected object available for editing.
 
+Focused room objects open their editor with Enter or Space. Arrow keys nudge the object; holding Shift increases the step.
+
 ## Planned development
 
 [ROADMAP.md](ROADMAP.md) specifies approximately **68–100 hours** of proposed work with acceptance criteria. [QUALITY-PLAN.md](QUALITY-PLAN.md) describes representative review dimensions and transition cases. Estimates are future engineering effort, not completed hours or promised paid work. [CONTRIBUTING.md](CONTRIBUTING.md) explains contribution conventions.

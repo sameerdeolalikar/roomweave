@@ -29,6 +29,27 @@ async function apply() {
 try {
   await page.goto(process.env.BASE_URL || "http://127.0.0.1:7432");
   await ready();
+  const beforeSpaceEdit = await exported();
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1050 });
+    await page.locator("#shape-bench").focus();
+    await page.keyboard.press("Space");
+    await page.locator("#editor[open]").waitFor();
+    assert.equal(await page.inputValue("#field-name"), beforeSpaceEdit.objects.find((x) => x.id === "bench").name);
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator("#editor").evaluate((x) => x.open), false);
+    assert.equal(await page.evaluate(() => document.activeElement.id), "shape-bench");
+    assert.deepEqual(await exported(), beforeSpaceEdit);
+    await page.locator("#shape-bench").focus();
+    await page.keyboard.press("Space");
+    await page.fill("#field-x", "520");
+    await apply();
+    assert.equal((await exported()).objects.find((x) => x.id === "bench").x, 520);
+    await page.click("#undo");
+    await ready();
+    assert.deepEqual(await exported(), beforeSpaceEdit);
+  }
+  await page.setViewportSize({ width: 1440, height: 1050 });
   await page.locator("#shape-bench").focus();
   await page.keyboard.press("ArrowRight");
   await ready();

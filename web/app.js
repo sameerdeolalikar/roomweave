@@ -534,7 +534,7 @@ function renderWorkspace() {
             (e.key === "ArrowDown" ? step : e.key === "ArrowUp" ? -step : 0),
         );
       }
-      if (e.key === "Enter") {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         pick(o.id);
         editEntry(o);
@@ -586,7 +586,7 @@ function renderWorkspace() {
     split,
     node(
       "p",
-      "Drag to move. Arrow keys nudge; Shift increases the step. Enter opens the editor. Out-of-bounds edits are rejected.",
+      "Drag to move. Arrow keys nudge; Shift increases the step. Enter or Space opens the editor. Out-of-bounds edits are rejected.",
       "muted",
     ),
   );
