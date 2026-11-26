@@ -33,6 +33,26 @@ try {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 1050 });
     await page.locator("#shape-bench").focus();
+    await page.keyboard.press("Enter");
+    await page.fill("#field-x", "0");
+    await apply();
+    const atBoundary = await exported();
+    await page.locator("#shape-bench").focus();
+    await page.keyboard.press("ArrowLeft");
+    await page.locator("#error:not([hidden])").waitFor();
+    await ready();
+    assert.equal(await page.evaluate(() => document.activeElement.id), "shape-bench");
+    assert.equal(await page.locator("#shape-bench").getAttribute("transform"), "translate(0 500)");
+    await page.keyboard.press("ArrowRight");
+    await ready();
+    assert.equal((await exported()).objects.find((x) => x.id === "bench").x, 10);
+    await page.click("#undo");
+    await ready();
+    assert.deepEqual(await exported(), atBoundary);
+    await page.click("#undo");
+    await ready();
+    assert.deepEqual(await exported(), beforeSpaceEdit);
+    await page.locator("#shape-bench").focus();
     await page.keyboard.press("Space");
     await page.locator("#editor[open]").waitFor();
     assert.equal(await page.inputValue("#field-name"), beforeSpaceEdit.objects.find((x) => x.id === "bench").name);

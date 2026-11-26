@@ -55,6 +55,8 @@ Rejected object additions preserve the current selection, so cancelling an inval
 
 Focused room objects open their editor with Enter or Space. Arrow keys nudge the object; holding Shift increases the step.
 
+Rejected out-of-bounds nudges preserve keyboard focus and position, so the next arrow key can move the object back into the room without selecting it again.
+
 ## Planned development
 
 [ROADMAP.md](ROADMAP.md) specifies approximately **68–100 hours** of proposed work with acceptance criteria. [QUALITY-PLAN.md](QUALITY-PLAN.md) describes representative review dimensions and transition cases. Estimates are future engineering effort, not completed hours or promised paid work. [CONTRIBUTING.md](CONTRIBUTING.md) explains contribution conventions.

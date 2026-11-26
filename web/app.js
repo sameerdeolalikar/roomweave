@@ -407,7 +407,7 @@ function moveObject(key, x, y) {
         ),
       });
     } catch (e) {
-      renderWorkspace();
+      render();
       throw e;
     }
   });
